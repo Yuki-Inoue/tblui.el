@@ -30,6 +30,7 @@
 
 (require 'tablist)
 (require 'dash)
+(require 'magit-popup)
 (require 'cl-lib)
 
 (defun tblui--append-str-to-symbol (symbol str)
