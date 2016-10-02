@@ -38,7 +38,7 @@
 
 (defun tblui--select-if-empty (&optional arg)
   "Select current row is selection is empty."
-  (when (tablist-get-marked-items)
+  (unless (tablist-get-marked-items)
     (tablist-put-mark)))
 
 (defmacro tblui-define (mode-name entries-provider table-layout popup-definitions)
