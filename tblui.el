@@ -36,7 +36,7 @@
 (defun tblui--append-str-to-symbol (symbol str)
   (intern (concat (symbol-name symbol) str)))
 
-(defun tblui--select-if-empty (&optional arg)
+(defun tblui--select-if-empty (&optional _arg)
   "Select current row is selection is empty."
   (unless (tablist-get-marked-items)
     (tablist-put-mark)))
