@@ -42,16 +42,16 @@
     (tablist-put-mark)))
 
 ;;;###autoload
-(defmacro tblui-define (mode-name entries-provider table-layout popup-definitions)
+(defmacro tblui-define (tblui-name entries-provider table-layout popup-definitions)
 
   (let* ((goto-ui-symbol
-          (tblui--append-str-to-symbol mode-name "-goto-ui"))
+          (tblui--append-str-to-symbol tblui-name "-goto-ui"))
          (ui-buffer-name
-          (concat "*" (symbol-name mode-name) "*"))
+          (concat "*" (symbol-name tblui-name) "*"))
          (refresher-symbol
-          (tblui--append-str-to-symbol mode-name "-refresher"))
+          (tblui--append-str-to-symbol tblui-name "-refresher"))
          (mode-name-symbol
-          (tblui--append-str-to-symbol mode-name "-mode"))
+          (tblui--append-str-to-symbol tblui-name "-mode"))
          (mode-map-symbol
           (tblui--append-str-to-symbol mode-name-symbol "-map"))
          (tablist-funcs
@@ -83,7 +83,7 @@
             (let ((popup-name (assoc-default :name popup-definition))
                   (associated-funcs (assoc-default :funcs popup-definition)))
               `(progn
-                 (magit-define-popup ,popup-name (quote ,mode-name)
+                 (magit-define-popup ,popup-name (quote ,tblui-name)
                    :actions ',(mapcar
                                (lambda (entry)
                                  (cl-multiple-value-bind
