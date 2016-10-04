@@ -41,6 +41,7 @@
   (unless (tablist-get-marked-items)
     (tablist-put-mark)))
 
+;;;###autoload
 (defmacro tblui-define (mode-name entries-provider table-layout popup-definitions)
 
   (let* ((goto-ui-symbol
