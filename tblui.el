@@ -36,9 +36,67 @@
 (defun tblui--append-str-to-symbol (symbol str)
   (intern (concat (symbol-name symbol) str)))
 
-;; taken from: https://github.com/politza/tablist
+
+;; Following 2 functions taken from: https://github.com/politza/tablist
 ;; Copyright (C) 2013, 2014  Andreas Politz
 ;; licensed under GPLv3.
+(defun tablist-map-over-marks (fn &optional arg show-progress
+                                  distinguish-one-marked)
+  (prog1
+      (cond
+       ((and arg (integerp arg))
+        (let (results)
+          (tablist-repeat-over-lines
+           arg
+           (lambda ()
+             (if show-progress (sit-for 0))
+             (push (funcall fn) results)))
+          (if (< arg 0)
+              (nreverse results)
+            results)))
+       (arg
+        ;; non-nil, non-integer ARG means use current item:
+        (tablist-skip-invisible-entries)
+        (unless (eobp)
+          (list (funcall fn))))
+       (t
+        (cl-labels ((search (re)
+                            (let (sucess)
+                              (tablist-skip-invisible-entries)
+                              (while (and (setq sucess
+                                                (re-search-forward re nil t))
+                                          (invisible-p (point)))
+                                (tablist-forward-entry))
+                              sucess)))
+          (let ((regexp (tablist-marker-regexp))
+                next-position results found)
+            (save-excursion
+              (goto-char (point-min))
+              ;; remember position of next marked file before BODY
+              ;; can insert lines before the just found file,
+              ;; confusing us by finding the same marked file again
+              ;; and again and...
+              (setq next-position (and (search regexp)
+                                       (point-marker))
+                    found (not (null next-position)))
+              (while next-position
+                (goto-char next-position)
+                (if show-progress (sit-for 0))
+                (push (funcall fn) results)
+                ;; move after last match
+                (goto-char next-position)
+                (forward-line 1)
+                (set-marker next-position nil)
+                (setq next-position (and (search regexp)
+                                         (point-marker)))))
+            (if (and distinguish-one-marked (= (length results) 1))
+                (setq results (cons t results)))
+            (if found
+                results
+              (unless (or (eobp) (invisible-p (point)))
+                (list (funcall fn))))))))
+    (tablist-move-to-major-column)))
+
 (defun tablist-get-marked-items (&optional arg distinguish-one-marked)
   "Return marked or ARG entries."
   (let ((items (save-excursion
