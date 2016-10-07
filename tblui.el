@@ -36,6 +36,21 @@
 (defun tblui--append-str-to-symbol (symbol str)
   (intern (concat (symbol-name symbol) str)))
 
+;; taken from: https://github.com/politza/tablist
+;; Copyright (C) 2013, 2014  Andreas Politz
+;; licensed under GPLv3.
+(defun tablist-get-marked-items (&optional arg distinguish-one-marked)
+  "Return marked or ARG entries."
+  (let ((items (save-excursion
+                 (tablist-map-over-marks
+                  (lambda () (cons (tabulated-list-get-id)
+                                   (tabulated-list-get-entry)))
+                  arg nil distinguish-one-marked))))
+    (if (and distinguish-one-marked
+             (eq (car items) t))
+        items
+      (nreverse items))))
+
 (defun tblui--select-if-empty (&optional _arg)
   "Select current row is selection is empty."
   (unless (tablist-get-marked-items)
