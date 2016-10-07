@@ -4,7 +4,7 @@
 
 ;; Author: Yuki Inoue <inouetakahiroki _at_ gmail.com>
 ;; URL: https://github.com/Yuki-Inoue/tblui.el
-;; Version: 0.0.1
+;; Version: 0.0.2
 ;; Package-Requires: ((dash "2.12.1") (magit-popup "2.6.0") (tablist "0.70") (cl-lib "0.5"))
 
 ;; This file is NOT part of GNU Emacs.
@@ -56,8 +56,8 @@ Each arguments are explained as follows:
  * `ENTRIES-PROVIDER` : the function which provides tabulated-list-entries
  * `TABLE-LAYOUT` : the `tabulated-list-format` to be used for the tblui.
  * `POPUP-DEFINITIONS` : list of popup definition.
-   A popup definition is an assoc of
-       `((:key . KEY) (:name . NAME) (:funcs . FUNCTIONS))`.
+   A popup definition is an plist of
+       `(:key KEY :name NAME :funcs FUNCTIONS)`.
    KEY is the key to be bound for the defined magit-popup.
    NAME is the name for defined magit-popup.
    FUNCTIONS is the list of action definition.
@@ -86,7 +86,7 @@ Calling this function will popup and switch to the tblui buffer."
           (tblui--append-str-to-symbol mode-name-symbol "-map"))
          (tablist-funcs
           (->> popup-definitions
-               (mapcar (apply-partially #'assoc-default :funcs))
+               (mapcar (lambda (pdef) (plist-get pdef :funcs)))
                (apply #'append)
                (mapcar (apply-partially #'nth 2))))
          (tablist-func-info-assoc
@@ -110,8 +110,8 @@ Calling this function will popup and switch to the tblui buffer."
 
        ,@(mapcar
           (lambda (popup-definition)
-            (let ((popup-name (assoc-default :name popup-definition))
-                  (associated-funcs (assoc-default :funcs popup-definition)))
+            (let ((popup-name (plist-get popup-definition :name))
+                  (associated-funcs (plist-get popup-definition :funcs)))
               `(progn
                  (magit-define-popup ,popup-name (quote ,tblui-name)
                    :actions ',(mapcar
@@ -129,8 +129,8 @@ Calling this function will popup and switch to the tblui buffer."
 
          ,@(mapcar
             (lambda (popup-definition)
-              (let ((key (assoc-default :key popup-definition))
-                    (popup-name (assoc-default :name popup-definition)))
+              (let ((key (plist-get popup-definition :key))
+                    (popup-name (plist-get popup-definition :name)))
                 `(define-key ,mode-map-symbol ,key (function ,popup-name))
                 ))
             popup-definitions)

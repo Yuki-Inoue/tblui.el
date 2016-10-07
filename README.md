@@ -34,24 +34,29 @@ Below is the snippet from https://github.com/Yuki-Inoue/aws.el .
   ("Status" 10 nil)
   ("IP" 15 nil)
   ("Settings" 20 nil)]
- (((:key . "I")
-   (:name . aws-instances-inspect-popup)
-   (:funcs . ((?I "Inspect" aws-instances-inspect-instances))))
+ ((:key "I"
+   :name aws-instances-inspect-popup
+   :funcs ((?I "Inspect" aws-instances-inspect-instances)))
 
-  ((:key . "S")
-   (:name . aws-instances-state-popup)
-   (:funcs . ((?O "Stop" aws-instances-stop-instances)
-              (?R "Reboot" aws-instances-reboot-instances)
-              (?T "Terminate" aws-instances-terminate-instances)
-              (?S "Start" aws-instances-start-instances))))
+  (:key "S"
+   :name aws-instances-state-popup
+   :funcs ((?O "Stop" aws-instances-stop-instances)
+           (?R "Reboot" aws-instances-reboot-instances)
+           (?T "Terminate" aws-instances-terminate-instances)
+           (?S "Start" aws-instances-start-instances)))
 
-  ((:key . "A")
-   (:name . aws-instances-action-popup)
-   (:funcs . ((?R "Rename Instance" aws-instances-rename-instance))))
+  (:key "A"
+   :name aws-instances-action-popup
+   :funcs ((?R "Rename Instance" aws-instances-rename-instance)))
 
-  ((:key . "C")
-   (:name . aws-instances-configure-popup)
-   (:funcs . ((?C "Append ssh configs to ~/.ssh/config" aws-instances-configure-ssh-config))))
+  (:key "C"
+   :name aws-instances-configure-popup
+   :funcs ((?C "Append ssh configs to ~/.ssh/config" aws-instances-configure-ssh-config)))
+
+  (:key "B"
+   :name aws-instances-backup-popup
+   :funcs ((?I "Inspect" aws-instances-inspect-backup-instances)
+           (?B "Backup" aws-instances-backup-instances)))
   ))
 ```
 
@@ -71,7 +76,7 @@ where
  * `ENTRIES-PROVIDER` : the function which provides tabulated-list-entries
  * `TABLE-LAYOUT` : the `tabulated-list-format` to be used for the tblui.
  * `POPUP-DEFINITIONS` : list of popup definition.
-   A popup definition is an assoc of `((:key . KEY) (:name . NAME) (:funcs . FUNCTIONS))`.  KEY is the key to be bound for the defined magit-popup.  NAME is the name for defined magit-popup.  FUNCTIONS is the list of action definition.  Action definition is a list of 3 elements, which is `(ACTIONKEY DESCRIPTION FUNCTION)`.  ACTIONKEY is the key to be used as action key in the magit-popup.  DESCRIPTION is the description of the action.
+   A popup definition is an plist of `(:key KEY :name NAME :funcs FUNCTIONS)`.  KEY is the key to be bound for the defined magit-popup.  NAME is the name for defined magit-popup.  FUNCTIONS is the list of action definition.  Action definition is a list of 3 elements, which is `(ACTIONKEY DESCRIPTION FUNCTION)`.  ACTIONKEY is the key to be used as action key in the magit-popup.  DESCRIPTION is the description of the action.
    FUNCTION is the logic to be called for this UI.  It is the elisp function which receives the IDs of tabulated-list entry, and do what ever operation.
 
 With this macro `TBLUI-NAME-goto-ui` function is defined.  Calling this function will popup and switch to the tblui buffer.
