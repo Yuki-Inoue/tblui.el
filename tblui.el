@@ -91,10 +91,7 @@
                                          (point-marker)))))
             (if (and distinguish-one-marked (= (length results) 1))
                 (setq results (cons t results)))
-            (if found
-                results
-              (unless (or (eobp) (invisible-p (point)))
-                (list (funcall fn))))))))
+            results))))
     (tablist-move-to-major-column)))
 
 (defun tablist-get-marked-items (&optional arg distinguish-one-marked)
