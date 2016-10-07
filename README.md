@@ -72,6 +72,6 @@ where
  * `TABLE-LAYOUT` : the `tabulated-list-format` to be used for the tblui.
  * `POPUP-DEFINITIONS` : list of popup definition.
    A popup definition is an assoc of `((:key . KEY) (:name . NAME) (:funcs . FUNCTIONS))`.  KEY is the key to be bound for the defined magit-popup.  NAME is the name for defined magit-popup.  FUNCTIONS is the list of action definition.  Action definition is a list of 3 elements, which is `(ACTIONKEY DESCRIPTION FUNCTION)`.  ACTIONKEY is the key to be used as action key in the magit-popup.  DESCRIPTION is the description of the action.
-   FUNCTION is the logic to be called for this UI.  It is the elisp function which receives the ID of tabulated-list entry, and do what ever operation.
+   FUNCTION is the logic to be called for this UI.  It is the elisp function which receives the IDs of tabulated-list entry, and do what ever operation.
 
 With this macro `TBLUI-NAME-goto-ui` function is defined.  Calling this function will popup and switch to the tblui buffer.

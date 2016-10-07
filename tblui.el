@@ -67,7 +67,7 @@ Each arguments are explained as follows:
    ACTIONKEY is the key to be used as action key in the magit-popup.
    DESCRIPTION is the description of the action.
    FUNCTION is the logic to be called for this UI.
-   It is the elisp function which receives the ID of tabulated-list entry,
+   It is the elisp function which receives the IDs of tabulated-list entry,
     and do what ever operation.
 
 With this macro `TBLUI-NAME-goto-ui` function is defined.
