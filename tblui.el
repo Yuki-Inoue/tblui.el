@@ -2,9 +2,14 @@
 
 ;; Copyright (C) 2016 Yuki Inoue
 
+;; 2 function defs are taken from: https://github.com/politza/tablist
+;; Namely, tblui--tablist-get-marked-items and tblui--tablist-map-over-marks
+;; Those copyright belongs to:
+;;     Copyright (C) 2013, 2014  Andreas Politz
+
 ;; Author: Yuki Inoue <inouetakahiroki _at_ gmail.com>
 ;; URL: https://github.com/Yuki-Inoue/tblui.el
-;; Version: 0.0.2
+;; Version: 0.0.3
 ;; Package-Requires: ((dash "2.12.1") (magit-popup "2.6.0") (tablist "0.70") (cl-lib "0.5"))
 
 ;; This file is NOT part of GNU Emacs.
@@ -40,7 +45,7 @@
 ;; Following 2 functions taken from: https://github.com/politza/tablist
 ;; Copyright (C) 2013, 2014  Andreas Politz
 ;; licensed under GPLv3.
-(defun tablist-map-over-marks (fn &optional arg show-progress
+(defun tblui--tablist-map-over-marks (fn &optional arg show-progress
                                   distinguish-one-marked)
   (prog1
       (cond
@@ -94,10 +99,10 @@
             results))))
     (tablist-move-to-major-column)))
 
-(defun tablist-get-marked-items (&optional arg distinguish-one-marked)
+(defun tblui--tablist-get-marked-items (&optional arg distinguish-one-marked)
   "Return marked or ARG entries."
   (let ((items (save-excursion
-                 (tablist-map-over-marks
+                 (tblui--tablist-map-over-marks
                   (lambda () (cons (tabulated-list-get-id)
                                    (tabulated-list-get-entry)))
                   arg nil distinguish-one-marked))))
@@ -106,9 +111,12 @@
         items
       (nreverse items))))
 
+;; end of copy from tablist
+
+
 (defun tblui--select-if-empty (&optional _arg)
   "Select current row is selection is empty."
-  (unless (tablist-get-marked-items)
+  (unless (tblui--tablist-get-marked-items)
     (tablist-put-mark)))
 
 ;;;###autoload
