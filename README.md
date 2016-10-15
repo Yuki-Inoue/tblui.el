@@ -4,6 +4,10 @@
 
 Define tabulated-list based UI easily.
 
+# How to Install
+
+Available on MELPA.  Also, you can clone this repo and put it on your loadpath.
+
 # Motivation
 
 `tabulated-list` is the official library which implements basic functionality for table like buffer.
