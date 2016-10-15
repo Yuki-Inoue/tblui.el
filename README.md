@@ -6,7 +6,7 @@ Define tabulated-list based UI easily.
 
 # How to Install
 
-Available on MELPA.  Also, you can clone this repo and put it on your loadpath.
+Available on MELPA.  Or, you can clone this repo and put it on your loadpath.
 
 # Motivation
 
