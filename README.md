@@ -25,8 +25,26 @@ In this document, the UI defined via this package is referred as tblui.
 
 # How to use
 
+Here's a very simple example:
+
+```
+(require 'tblui)
+
+(defun test-tblui-entries ()
+  "Entry provider a list of lists, car is index, cdr is a vector of columns."
+  (list
+   (list 0 ["in progress" "https://example.com/" "1970-01-01T00:00:00Z" "push" "Test/Build"])
+   (list 1 ["in progress" "https://example.com/" "1970-01-01T00:00:00Z" "push" "Test/Build"])
+   (list 3 ["in progress" "https://example.com/" "1970-01-01T00:00:00Z" "push" "Test/Build"])))
+
+(tblui-define test-tblui test-tblui-entries
+ [("Status" 10 nil) ("Link" 25 nil) ("Started At" 12 nil) ("Event" 8 nil) ("Workflow" 10 nil)])
+```
+
 I believe giving actual example would be the most descriptory.
-Below is the snippet from https://github.com/Yuki-Inoue/aws.el .
+Below is the snippet from https://github.com/Yuki-Inoue/aws.el
+
+This covers popup ui / key binding:
 
 ```
 (tblui-define
