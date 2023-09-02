@@ -27,7 +27,7 @@ In this document, the UI defined via this package is referred as tblui.
 
 Here's a very simple example:
 
-```
+```emacs-lisp
 (require 'tblui)
 
 (defun test-tblui-entries ()
@@ -46,7 +46,7 @@ Below is the snippet from https://github.com/Yuki-Inoue/aws.el
 
 This covers popup ui / key binding:
 
-```
+```emacs-lisp
 (tblui-define
  aws-instances
  aws-instances-get-tabulated-list-entries
@@ -88,7 +88,7 @@ and the UI can be visited by calling `aws-instances-goto-ui` function in this ex
 
 The synopsis of this macro is shown below:
 
-```
+```emacs-lisp
 (tblui-define TBLUI-NAME ENTRIES-PROVIDER TABLE-LAYOUT POPUP-DEFINITIONS)
 ```
 
