@@ -46,7 +46,7 @@
 ;; Copyright (C) 2013, 2014  Andreas Politz
 ;; licensed under GPLv3.
 (defun tblui--tablist-map-over-marks (fn &optional arg show-progress
-                                  distinguish-one-marked)
+                                      distinguish-one-marked)
   (prog1
       (cond
        ((and arg (integerp arg))
@@ -65,7 +65,7 @@
         (unless (eobp)
           (list (funcall fn))))
        (t
-        (cl-labels ((search (re)
+        (cl-labels ((cl-search (re)
                             (let (sucess)
                               (tablist-skip-invisible-entries)
                               (while (and (setq sucess
@@ -81,7 +81,7 @@
               ;; can insert lines before the just found file,
               ;; confusing us by finding the same marked file again
               ;; and again and...
-              (setq next-position (and (search regexp)
+              (setq next-position (and (cl-search regexp)
                                        (point-marker))
                     found (not (null next-position)))
               (while next-position
@@ -92,7 +92,7 @@
                 (goto-char next-position)
                 (forward-line 1)
                 (set-marker next-position nil)
-                (setq next-position (and (search regexp)
+                (setq next-position (and (cl-search regexp)
                                          (point-marker)))))
             (if (and distinguish-one-marked (= (length results) 1))
                 (setq results (cons t results)))
@@ -120,7 +120,7 @@
     (tablist-put-mark)))
 
 ;;;###autoload
-(defmacro tblui-define (tblui-name entries-provider table-layout popup-definitions)
+(defmacro tblui-define (tblui-name tblui-title tblui-description entries-provider table-layout popup-definitions)
 
   "Define tabulated list UI easily.  Hereafter referred as tblui.
 This macro defines functions and popups for the defined tblui.
@@ -131,6 +131,8 @@ Each arguments are explained as follows:
 
  * `TBLUI-NAME` : the symbol name of defining tblui.  It will be used
                   as prefix for functions defined via this macro.
+ * `TBLUI-TITLE` : String title for the major mode created
+ * `TBLUI-DESCRIPTION` : Sting description for the major mode created
  * `ENTRIES-PROVIDER` : the function which provides tabulated-list-entries
  * `TABLE-LAYOUT` : the `tabulated-list-format` to be used for the tblui.
  * `POPUP-DEFINITIONS` : list of popup definition.
@@ -150,8 +152,6 @@ Each arguments are explained as follows:
 
 With this macro `TBLUI-NAME-goto-ui` function is defined.
 Calling this function will popup and switch to the tblui buffer."
-
-
   (let* ((goto-ui-symbol
           (tblui--append-str-to-symbol tblui-name "-goto-ui"))
          (ui-buffer-name
@@ -162,6 +162,10 @@ Calling this function will popup and switch to the tblui buffer."
           (tblui--append-str-to-symbol tblui-name "-mode"))
          (mode-map-symbol
           (tblui--append-str-to-symbol mode-name-symbol "-map"))
+         (tabulated-list-format-symbol
+          (tblui--append-str-to-symbol tblui-name "-tabulated-list-format"))
+         (tabulated-list-format-docstring
+          (format "Table layout for %s." tblui-name))
          (tablist-funcs
           (->> popup-definitions
                (mapcar (lambda (pdef) (plist-get pdef :funcs)))
@@ -198,22 +202,23 @@ Calling this function will popup and switch to the tblui buffer."
                                      (key descr raw-func) entry
                                    (list key descr (assoc-default raw-func tablist-func-info-assoc))))
                                associated-funcs))
-                 (add-function :before (symbol-function ',popup-name) #'tblui--select-if-empty))
-              ))
-            popup-definitions)
+                 (add-function :before (symbol-function ',popup-name) #'tblui--select-if-empty))))
+              
+          popup-definitions)
 
-       (define-derived-mode ,mode-name-symbol tabulated-list-mode "Containers Menu"
-         "Major mode for handling a list of docker containers."
+       (defvar ,tabulated-list-format-symbol ,table-layout ,tabulated-list-format-docstring)
+
+       (define-derived-mode ,mode-name-symbol tabulated-list-mode tblui-title tblui-description
 
          ,@(mapcar
             (lambda (popup-definition)
               (let ((key (plist-get popup-definition :key))
                     (popup-name (plist-get popup-definition :name)))
-                `(define-key ,mode-map-symbol ,key (function ,popup-name))
-                ))
+                `(define-key ,mode-map-symbol ,key (function ,popup-name))))
+                
             popup-definitions)
 
-         (setq tabulated-list-format ,table-layout)
+         (setq tabulated-list-format ,tabulated-list-format-symbol)
          (setq tabulated-list-padding 2)
          (add-hook 'tabulated-list-revert-hook (function ,refresher-symbol) nil t)
          (tabulated-list-init-header)
@@ -223,10 +228,10 @@ Calling this function will popup and switch to the tblui buffer."
          (pop-to-buffer ,ui-buffer-name)
          (tabulated-list-init-header)
          (,mode-name-symbol)
-         (tabulated-list-revert))
+         (tabulated-list-revert)))))
 
-       )
-    ))
+       
+    
 
 (provide 'tblui)
 ;;; tblui.el ends here
