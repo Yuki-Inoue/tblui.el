@@ -9,7 +9,7 @@
 
 ;; Author: Yuki Inoue <inouetakahiroki _at_ gmail.com>
 ;; URL: https://github.com/Yuki-Inoue/tblui.el
-;; Version: 0.1.0
+;; Version: 0.2.0
 ;; Package-Requires: ((dash "2.12.1") (magit-popup "2.6.0") (tablist "0.70") (cl-lib "0.5"))
 
 ;; This file is NOT part of GNU Emacs.
@@ -120,7 +120,7 @@
     (tablist-put-mark)))
 
 ;;;###autoload
-(defmacro tblui-define (tblui-name tblui-title tblui-description entries-provider table-layout popup-definitions)
+(defmacro tblui-define (tblui-name title description entries-provider table-layout popup-definitions)
 
   "Define tabulated list UI easily.  Hereafter referred as tblui.
 This macro defines functions and popups for the defined tblui.
@@ -131,8 +131,8 @@ Each arguments are explained as follows:
 
  * `TBLUI-NAME` : the symbol name of defining tblui.  It will be used
                   as prefix for functions defined via this macro.
- * `TBLUI-TITLE` : String title for the major mode created
- * `TBLUI-DESCRIPTION` : Sting description for the major mode created
+ * `TITLE` : String title for the major mode created
+ * `DESCRIPTION` : Sting description for the major mode created
  * `ENTRIES-PROVIDER` : the function which provides tabulated-list-entries
  * `TABLE-LAYOUT` : the `tabulated-list-format` to be used for the tblui.
  * `POPUP-DEFINITIONS` : list of popup definition.
@@ -208,8 +208,7 @@ Calling this function will popup and switch to the tblui buffer."
 
        (defvar ,tabulated-list-format-symbol ,table-layout ,tabulated-list-format-docstring)
 
-       (define-derived-mode ,mode-name-symbol tabulated-list-mode tblui-title tblui-description
-
+       (define-derived-mode ,mode-name-symbol tabulated-list-mode ,title ,description
          ,@(mapcar
             (lambda (popup-definition)
               (let ((key (plist-get popup-definition :key))
@@ -229,9 +228,6 @@ Calling this function will popup and switch to the tblui buffer."
          (tabulated-list-init-header)
          (,mode-name-symbol)
          (tabulated-list-revert)))))
-
-       
-    
 
 (provide 'tblui)
 ;;; tblui.el ends here
